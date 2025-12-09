@@ -6,18 +6,13 @@ import os
 # ----------------------------
 
 # Путь к локальному репозиторию
-repo_path = r"C:\Users\Nurtas\Desktop\Новая папка (2)"
-# <- замени на путь к твоему репо
+repo_path = r"C:\Users\Nurtas\Desktop\Новая папка (2)"  # <- твой путь
 
 # Сообщение коммита
 commit_message = "Автоматический коммит через Python"
 
 # Имя удалённого репозитория (обычно 'origin')
 remote_name = "origin"
-
-# Ветка (обычно 'main' или 'master')
-branch_name = "master"
-
 # ----------------------------
 
 # Проверяем, существует ли репозиторий
@@ -26,6 +21,10 @@ if not os.path.exists(repo_path):
 
 repo = git.Repo(repo_path)
 
+# Определяем текущую ветку
+current_branch = repo.active_branch.name
+print(f"Текущая ветка: {current_branch}")
+
 # Добавляем все изменения
 repo.git.add(A=True)
 
@@ -33,11 +32,17 @@ repo.git.add(A=True)
 if repo.is_dirty():
     # Создаём коммит
     repo.index.commit(commit_message)
-    print(f"Коммит создан: {commit_message}")
+    
+    # Получаем список изменённых файлов
+    changed_files = [item.a_path for item in repo.index.diff("HEAD~1")] + repo.untracked_files
+    if changed_files:
+        print("Закоммичены файлы:")
+        for f in changed_files:
+            print(f" - {f}")
 
     # Пушим на GitHub
     origin = repo.remote(name=remote_name)
-    origin.push(branch_name)
-    print(f"Изменения запушены на {remote_name}/{branch_name}")
+    origin.push(current_branch)
+    print(f"Изменения запушены на {remote_name}/{current_branch}")
 else:
     print("Нет изменений для коммита.")
