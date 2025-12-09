@@ -16,7 +16,8 @@ commit_message = "Автоматический коммит через Python"
 remote_name = "origin"
 
 # Ветка (обычно 'main' или 'master')
-branch_name = "main"
+branch_name = "master"
+
 # ----------------------------
 
 # Проверяем, существует ли репозиторий
